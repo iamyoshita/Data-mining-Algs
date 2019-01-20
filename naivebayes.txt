@@ -1,0 +1,96 @@
+
+import java.io.*;
+import java.util.*;
+class tuple{
+String age;
+char income;
+int stu;
+char credit;
+int clas;
+}
+public class naive {
+
+	public static void main(String[] args) throws Exception{
+		// TODO Auto-generated method stub
+		File f=new File("inp");
+		int py=0,pn=0;
+		BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+		tuple[] arr=new tuple[14];
+		for(int i=0;i<14;i++) {
+			arr[i]=new tuple();
+			StringTokenizer st=new StringTokenizer(br.readLine()," ");
+			arr[i].age=st.nextToken();
+			arr[i].income=st.nextToken().charAt(0);
+			if(st.nextToken().equals("no"))arr[i].stu=0;
+			else arr[i].stu=1;
+			arr[i].credit=st.nextToken().charAt(0);
+			if(st.nextToken().equals("no")) {arr[i].clas=0;pn++;}
+			else {arr[i].clas=1;py++;}
+		}
+		System.out.println("enter age <=30 or 31..40 or >40");
+		BufferedReader bb=new BufferedReader(new InputStreamReader(System.in));
+		String age=bb.readLine();
+		System.out.println("enter income h or m or l");
+		char inc=bb.readLine().charAt(0);
+		System.out.println("enter student 1 or 0");
+		int stu=Integer.parseInt(bb.readLine());
+		System.out.println("enter credit f or e");
+		char cred=bb.readLine().charAt(0);
+		double a=0,b=0,c=0,d=0,ay=0,an=0,by=0,bn=0,cy=0,cn=0,dy=0,dn=0;
+		for(int i=0;i<14;i++) {
+			if(arr[i].age.equals(age)) {
+				a++;
+				if(arr[i].clas==1)ay++;
+				else
+					an++;
+			}
+			if(arr[i].income==inc) {
+				b++;
+				if(arr[i].clas==1)by++;
+				else
+					bn++;
+			}
+			if(arr[i].stu==stu) {
+				c++;
+				if(arr[i].clas==1)cy++;
+				else
+					cn++;
+			}
+			if(arr[i].credit==cred) {
+				d++;
+				if(arr[i].clas==1)dy++;
+				else
+					dn++;
+			}
+		}
+double ansy=(double)(ay/a)*(by/b)*(cy/c)*(dy/d);//p(x/yes)
+double ansn=(double)(an/a)*(bn/b)*(cn/c)*(dn/d);		
+double fy=ansy*py/14;//p(yes/x)=p(x/yes)*p(yes)
+double fn=ansn*pn/14;
+if(fy>fn)
+	System.out.println("class attribute is yes "+fy);
+else
+	System.out.println("class attribute is no "+fn);
+br.close();
+	}
+
+}
+
+
+
+
+inp file has:
+<=30 h no f no
+<=30 h no e no
+31..40 h no f yes
+>40 m no f yes
+>40 l yes f yes
+>40 l yes e no
+31..40 l yes e yes
+<=30 m no f no
+<=30 l yes f yes
+>40 m yes f yes
+<=30 m yes e yes
+31..40 m no e yes
+31..40 h yes f yes
+>40 m no e no

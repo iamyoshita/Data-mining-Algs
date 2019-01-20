@@ -1,0 +1,105 @@
+package knn;
+import java.io.*;
+import java.net.*;
+import java.util.StringTokenizer;
+import java.math.*;
+
+class tuple{
+	//int sno;
+	int age;
+	int wt;
+	double ht;
+	int cl;
+	double dist;
+	tuple(){}
+	tuple(int b,int c,double d,int e){
+		//sno=a;
+		age=b;
+		wt=c;
+		ht=d;
+		cl=e;
+	}
+	double sq(double a) {
+		return a*a;
+	}
+	void eudis(tuple x) {
+		double ans=0;
+		ans=sq(this.age-x.age)+sq(this.wt-x.wt)+sq(this.ht-x.ht);
+		this.dist=Math.sqrt(ans);
+	}
+}
+public class knn {
+	public static void main(String args[]) throws Exception{
+		File f=new File("inpu");
+		BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+		tuple test=new tuple(38,65,5.3,0);
+		tuple[] arr=new tuple[7];
+		for(int i=0;i<7;i++) {
+			StringTokenizer st=new StringTokenizer(br.readLine()," ");
+			//while(st.hasMoreElements()) {
+				arr[i]=new tuple();
+				//arr[i].sno=i+1;
+				arr[i].age=Integer.parseInt(st.nextToken());
+				arr[i].wt=Integer.parseInt(st.nextToken());
+				arr[i].ht=Double.parseDouble(st.nextToken());
+				arr[i].cl=Integer.parseInt(st.nextToken());
+				arr[i].eudis(test);
+				System.out.println(arr[i].age+" "+arr[i].wt+" "+arr[i].ht+" "+arr[i].cl+" "+arr[i].dist);
+			//}
+		}
+		for(int i=0;i<7;i++) {
+			for(int j=i+1;j<7;j++) {
+				if(arr[i].dist>arr[j].dist) {
+					tuple x;
+					x=arr[i];
+					arr[i]=arr[j];
+					arr[j]=x;
+				}
+			}
+		}
+		int k=3,z=0,o=0;
+		for(int i=0;i<k;i++) {
+			System.out.println(arr[i].dist);
+			if(arr[i].cl==0)
+				z++;
+			else
+				o++;
+		}
+		if(z>=o)
+			System.out.println("test set belongs to class 0");
+		else
+			System.out.println("test set belongs to class 1");
+		br.close();	
+		
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+inpu file has:
+36 70 5.4 1
+25 62 5 0
+43 63 5.9 1
+65 70 6.2 1
+49 58 4.8 0
+53 65 4.9 0
+39 60 5 0

@@ -1,0 +1,145 @@
+input:
+A C D E
+B C E
+C B A E
+B C D E
+A B C E
+A B C E 
+
+133 lines
+
+
+package apriori;
+import java.io.*;
+import java.util.*;
+class tuple{
+	Set<Character> str;
+	int supp;
+	tuple(Set<Character> s,int x){
+		str=s;
+		supp=x;
+	}
+}
+public class apri {
+	static Set<tuple> c;
+	static Set<tuple> l;
+	static char d[][];
+	static int minsup;
+static int count(Set<Character> ch) {
+	int x=0;
+	int flag=0;
+	for(int i=0;i<6;i++) {
+		Iterator<Character> it=ch.iterator();
+		while(it.hasNext()) {
+			char xyz=it.next();
+			flag=0;
+		for(int p=0;p<5;p++) {
+			if(d[i][p]==xyz) {
+				flag=1;
+			}
+		}
+	if(flag==0)break;
+		}
+		if(flag==1)x++;
+	}
+	return x;
+}
+static void prune() {
+	l.clear();
+	Iterator<tuple> it=c.iterator();
+	while(it.hasNext()) {
+		tuple t=it.next();
+		if(t.supp>=minsup)l.add(t);
+	}
+	System.out.println("----L------");
+	for(tuple x: l)
+	System.out.println(x.str+" "+x.supp );
+
+}
+static void freq() {
+int x=0;
+int size=2;
+while(l.size()>1) {
+	x=0;
+	Set<tuple> l1=new HashSet<>();
+	l1.clear();
+	Iterator<tuple> it1=l.iterator();
+	while(it1.hasNext()) {
+		x++;
+		Set<Character> s=new HashSet<>();
+		Iterator<Character> it3=it1.next().str.iterator();
+		while(it3.hasNext())	
+			s.add(it3.next());
+		Iterator<tuple> it2=l.iterator();
+		int q=x;
+		while(q!=0) {it2.next();q--;}
+		while(it2.hasNext()) {
+			Set<Character> s1=new HashSet<>();
+s1.clear();		
+			Iterator<Character> yo=s.iterator();
+			
+			while(yo.hasNext())
+				s1.add(yo.next());
+		//	System.out.println(s1.toString());
+		Iterator<Character> it4=it2.next().str.iterator();
+		while(it4.hasNext())	
+		s1.add(it4.next());
+		if(s1.size()!=size)continue;
+		//System.out.println(s1.toString());
+		l1.add(new tuple(s1,count(s1)));
+		}
+	}
+	c.clear();
+	for(tuple haha: l1) {
+		int fl=0;
+		for(tuple haa: l1) {
+			if(haha.str.toString().equals(haa.str.toString())) { fl++;
+			if(fl>1)
+				haa.supp=-1;}
+		}
+			c.add(haha);
+	}
+	prune();
+	size++;}
+	}
+	public static void main(String[] args) throws Exception {
+		// TODO Auto-generated method stub
+		File f=new File("input");
+		minsup=3;
+BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+Set<Character> cc=new HashSet<>();
+d=new char[6][5];
+for(int i=0;i<6;i++) {
+	StringTokenizer st=new StringTokenizer(br.readLine()," ");
+	int p=0;
+	while(st.hasMoreElements())
+		{
+		String ss=st.nextToken();
+			d[i][p]=ss.charAt(0);
+			p++;
+		cc.add(ss.charAt(0));
+		}
+}
+System.out.print("set is " + cc+"\n");
+for(int i=0;i<6;i++) {
+	for(int k=0;k<5;k++)
+		System.out.print(d[i][k]+" ");
+System.out.println();}
+c=new HashSet<>();
+l=new HashSet<>();
+Iterator<Character> it=cc.iterator();
+while(it.hasNext()) {
+	char ch=it.next();
+	Set<Character> s=new HashSet<>();
+	s.add(ch);
+	c.add(new tuple(s,count(s)));
+}
+System.out.println("C1");
+for(tuple x:c)
+System.out.println(x.str+" "+x.supp );
+prune();
+freq();
+br.close();
+	}
+
+}

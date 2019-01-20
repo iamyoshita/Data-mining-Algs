@@ -1,0 +1,120 @@
+output:enter the no of input
+5
+enter the input
+5
+1
+10
+20
+30
+enter the no of clusters k
+2
+step 1: [5, 10, 20, 30]
+step 1: [1]
+next step:
+[10, 20, 30]
+[5, 1]
+next step:
+[20, 30]
+[5, 1, 10]
+next step:
+[20, 30]
+[5, 1, 10]
+
+
+code:
+package kmeans;
+import java.io.*;
+import java.util.*;
+class cluster{
+	ArrayList<Integer> c;
+	cluster(){
+		c=new ArrayList<Integer>();
+	}
+	cluster(int x){
+		c=new ArrayList<Integer>();
+		c.add(x);
+	}
+	
+}
+public class kme {
+	
+	static double mean(cluster a) {
+		double ans=0;
+		for(int i=0;i<a.c.size();i++) {
+			ans+=a.c.get(i);
+		}
+		return ans/a.c.size();
+	}
+	static double dist(double x,int y) {
+		return x>y?x-y:y-x;
+	}
+	static void checkwithsse(int[] arr,int n,int k, ArrayList<cluster> ans,double sse) {
+		ArrayList<cluster> aa=new ArrayList<cluster>();
+		for(int i=0;i<k;i++) {
+			aa.add(new cluster());
+		}
+		for(int i=0;i<n;i++) {
+			double min=1000000;
+			int ind=0;
+			for(int j=0;j<k;j++) {
+			double min1=dist(mean(ans.get(j)),arr[i]);
+			if(min1<min) {
+				min=min1;
+				ind=j;
+			}
+			}
+			aa.get(ind).c.add(arr[i]);
+		}
+		System.out.println("next step:");
+		for(int i=0;i<k;i++) {
+			System.out.println(aa.get(i).c.toString());
+		}
+		double newsse=0;
+		for(int i=0;i<k;i++) {
+			for(int j=0;j<aa.get(i).c.size();j++)
+			newsse+=Math.pow(mean(aa.get(i))-aa.get(i).c.get(j),2);
+		}
+		if(newsse==sse) {
+			return;
+		}
+		else
+		checkwithsse(arr,n,k,aa,newsse);
+	}
+	static void check(int[] arr,int n,int k, ArrayList<cluster> ans) {
+		for(int i=k;i<n;i++) {
+			double min=1000000;
+			int ind=0;
+			for(int j=0;j<k;j++) {
+			double min1=dist(ans.get(j).c.get(0),arr[i]);
+			if(min1<min) {
+				min=min1;
+				ind=j;
+			}
+			}
+			ans.get(ind).c.add(arr[i]);
+		}
+		for(int i=0;i<k;i++) {
+			System.out.println("step 1: "+ans.get(i).c.toString());
+		}
+		checkwithsse(arr,n,k,ans,0);
+	}
+	public static void main(String[] args) throws Exception{
+		// TODO Auto-generated method stub
+System.out.println("enter the no of input");
+BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+int n= Integer.parseInt(br.readLine());
+System.out.println("enter the input");
+int arr[]=new int[n];
+for(int i=0;i<n;i++) {
+arr[i]=Integer.parseInt(br.readLine());
+}
+System.out.println("enter the no of clusters k");
+int k=Integer.parseInt(br.readLine());
+ArrayList<cluster> ans=new ArrayList<cluster>();
+for(int i=0;i<k;i++) {
+ans.add(new cluster(arr[i]));
+}
+check(arr,n,k,ans);
+	br.close();	
+	}
+}
